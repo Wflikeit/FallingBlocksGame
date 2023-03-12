@@ -65,8 +65,10 @@ class TowerFly:
             self.player.moving_left = True
         elif event.key == pygame.K_RIGHT and not self.player.is_colliding_right:
             self.player.moving_right = True
-        elif event.key == pygame.K_SPACE and not self.player.jumping:
+        elif event.key == pygame.K_SPACE and self.player.jumping_iterator < 1:
             self.player.jumping = True
+            self.player.falling = False
+            print("skokkkkkkkkkkkkkk")
 
         elif event.key == pygame.K_q:
             sys.exit()
@@ -123,10 +125,14 @@ class TowerFly:
         elif self.player.moving_right and self.player.is_colliding_left:
             self.player.is_colliding_left = False
 
-        if self.player.rect.right > 450:
+        if self.player.rect.right > 500:
             self.player.is_colliding_right = True
             self.player.moving_right = False
         elif self.player.moving_left and self.player.is_colliding_right:
             self.player.is_colliding_right = False
         self.player.standing = pygame.sprite.spritecollideany(self.player, self.bricks2)
-        print(f"{self.player.standing}           {self.player.rect.bottom}    {self.floor_y}")
+        if self.player.standing == None:
+            self.player.standing = False
+        print(
+            f"{self.player.jumping_iterator},    {self.player.jumping},     {self.player.falling}  {self.player.jumping_counter}")
+
