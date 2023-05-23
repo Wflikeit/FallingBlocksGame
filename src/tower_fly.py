@@ -146,7 +146,8 @@ class TowerFly:
         print(
             f"{self.falling_bricks} {self.bricks2} {self.brick.falling_speed}")
 
-    def _generate_falling_block(self, block_x: int):
+    def _generate_falling_block(self, block_x: int) -> None:
+        """Generating falling block"""
         x_cord_for_falling_block = self._choose_coordinates_of_falling_blocks(block_x)
         falling_block = Falling_Brick()  # Create an instance of Falling_Brick instead of Brick
         falling_block.rect.x = x_cord_for_falling_block
@@ -154,12 +155,13 @@ class TowerFly:
         self.falling_bricks.add(falling_block)
         self.brick_counter += 1
 
-    def _choose_coordinates_of_falling_blocks(self, block_x):
+    def _choose_coordinates_of_falling_blocks(self, block_x: int) -> int:
+        """Getting random starting coordinates for falling blocks"""
         n = random.randint(1, 7)
         x_cord_for_falling_block = n * block_x
         return x_cord_for_falling_block
 
-    def _update_falling_blocks(self, brick_width: int):
+    def _update_falling_blocks(self, brick_width: int) -> None:
         """Update positions of falling blocks"""
         for block in self.falling_bricks:
             block.rect.y += self.brick.falling_speed
@@ -179,4 +181,3 @@ class TowerFly:
         if self.level_counter == 10:
             self.brick.falling_speed += 1
             self.level_counter = 0
-
