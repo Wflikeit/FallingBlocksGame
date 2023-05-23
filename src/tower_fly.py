@@ -8,6 +8,7 @@ from player import Player
 from settings import Settings
 from background import Background
 from brick import Brick
+from brick import Falling_Brick
 
 
 class TowerFly:
@@ -23,6 +24,7 @@ class TowerFly:
         self.bricks1 = pygame.sprite.Group()
         self.bricks2 = pygame.sprite.Group()
         self.falling_bricks = pygame.sprite.Group()
+        self.falling_brick = Falling_Brick()
         self._create_bricks()
         self.player = Player(self.settings.player_speed_x, self.settings.player_speed_y, self.brick.rect.y)
         self.settings.screen_width = self.screen.get_rect().width
@@ -146,7 +148,7 @@ class TowerFly:
 
     def _generate_falling_block(self, block_x: int):
         x_cord_for_falling_block = self._choose_coordinates_of_falling_blocks(block_x)
-        falling_block = Brick()  # Create a new instance of Brick for the falling block
+        falling_block = Falling_Brick()  # Create an instance of Falling_Brick instead of Brick
         falling_block.rect.x = x_cord_for_falling_block
         falling_block.rect.y = 0
         self.falling_bricks.add(falling_block)
