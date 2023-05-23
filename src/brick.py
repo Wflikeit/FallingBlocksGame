@@ -13,8 +13,6 @@ class Brick(Sprite):
         self.rect = self.image.get_rect()
         self.y = 780
         self.rect.y = self.y
-        # self.rect.width = self.rect.width
-        # self.rect.height = 13 * self.rect.height
-        #
-        # self.rect.x = self.rect.width
-        # self.rect.y = self.rect.height
+        self.falling_speed = 4  # Add the falling_speed attribute and set an appropriate value
+        self.brick_width = self.rect.x
+
