@@ -16,6 +16,7 @@ class Brick(pygame.sprite.Sprite):
         self.falling_speed = 4  # Add the falling_speed attribute and set an appropriate value
         self.brick_width = self.rect.x
 
+
 class Falling_Brick(Brick):
     def __init__(self):
         super().__init__()  # Call the parent class's __init__ method
@@ -28,4 +29,3 @@ class Falling_Brick(Brick):
         self.rect.y = self.y
         self.falling_speed = 4  # Add the falling_speed attribute and set an appropriate value
         self.brick_width = self.rect.x
-

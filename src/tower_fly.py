@@ -9,6 +9,9 @@ from settings import Settings
 from background import Background
 from brick import Brick
 from brick import Falling_Brick
+from Scoreboard import Scoreboard
+from game_stats import GameStats
+from button import Button
 
 
 class TowerFly:
@@ -29,6 +32,9 @@ class TowerFly:
         self.player = Player(self.settings.player_speed_x, self.settings.player_speed_y, self.brick.rect.y)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
+        self.game_stats = GameStats(self)
+        self.scoreboard = Scoreboard(self)
+        self.play_button = Button(self, "Play")
 
         pygame.display.set_caption("Tower Fly")
 
@@ -36,12 +42,13 @@ class TowerFly:
         """ Main loop for pygame"""
         while True:
             self.check_event()
-            self._check_player_if_player_is_colliding()
-            self.player.update(self.screen)
-            self.settings.iterator += self.settings.speed_play
-            self.display_bg()
-
-            self._update_falling_blocks(self.brick_width)  # Pass brick_width as an argument
+            if self.game_stats.game_active:
+                self._check_player_if_player_is_colliding()
+                self.player.update(self.screen)
+                self.settings.iterator += self.settings.speed_play
+                self.display_bg()
+                self.falling_bricks.draw(self.screen)
+                self._update_falling_blocks(self.brick_width)  # Pass brick_width as an argument
 
             self._update_screen()
 
@@ -68,6 +75,9 @@ class TowerFly:
                 self.check_keydown_event(event)
             elif event.type == pygame.KEYUP:
                 self.check_keyup_event(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.game_stats.game_active = True
+                self._update_falling_blocks(self.brick_width)
 
     def check_keydown_event(self, event: Event) -> None:
         """Reaction for pressing of keys"""
@@ -93,7 +103,10 @@ class TowerFly:
         self.player.blitme_up(self.screen)
         self.bricks1.draw(self.screen)
         self.bricks2.draw(self.screen)
-        self.falling_bricks.draw(self.screen)
+        self.scoreboard.show_score()
+
+        if not self.game_stats.game_active:
+            self.play_button.draw_button()
 
     def _create_bricks(self) -> None:
         """Creating a static block of bricks"""
@@ -143,8 +156,8 @@ class TowerFly:
             self.player.is_colliding_right = False
         self.player.standing = pygame.sprite.spritecollideany(self.player, self.bricks2)
 
-        print(
-            f"{self.falling_bricks} {self.bricks2} {self.brick.falling_speed}")
+        # print(
+        #     f"{self.}")
 
     def _generate_falling_block(self, block_x: int) -> None:
         """Generating falling block"""
@@ -172,6 +185,7 @@ class TowerFly:
                 self._generate_falling_block(brick_width)
                 self.brick_counter -= 1
                 self.level_counter += 1
+                self.game_stats.score += self.settings.points_counter
             if block.rect.y >= int(self.floor_y / 2) & self.brick_counter < 4:
                 self._generate_falling_block(brick_width)
                 self._generate_falling_block(brick_width)
@@ -181,6 +195,11 @@ class TowerFly:
             if pygame.sprite.spritecollide(self.player, self.falling_bricks, False):
                 # Handle collision with the player (e.g., game over)
                 print("Collision with player!")
+                pygame.sprite.Group.empty(self.falling_bricks)
+                self.game_stats.game_active = False
+
         if self.level_counter == 10:
             self.brick.falling_speed += 1
+            self.settings.player_speed_x += 1
+            self.settings.points_counter *= 2
             self.level_counter = 0

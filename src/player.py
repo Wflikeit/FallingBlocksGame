@@ -7,26 +7,22 @@ class Player:
     """Class made for managing player"""
 
     def __init__(self, speed_x: int, speed_y: int, brick_height: int) -> None:
-        """initialing of player and initial position"""
-        # self.screen = tf_game.screen
-        # self.settings = tf_game.settings
-        # self.screen_rect = tf_game.screen.get_rect()
-
+        """initializing player and initial position"""
         self.speed_x = speed_x
         self.speed_y = speed_y
 
         # uploading image of jumping player
         self.image = pygame.image.load("images/Jump.png")
-        self.image = pygame.transform.scale(self.image, (80, 70))
+        self.image = pygame.transform.scale(self.image, (50, 70))
         self.rect = self.image.get_rect()
 
-        # location of player is stored in float type
-        self.x = 300
-        self.y = 711
+        # location of player is stored as floats
+        self.x = 300.0
+        self.y = 711.0
         self.rect.x = self.x
         self.rect.y = self.y
 
-        # Options indicating that the player is moving
+        # Flags indicating player's movement and collision status
         self.moving_right = False
         self.moving_left = False
         self.jumping = False
@@ -39,7 +35,7 @@ class Player:
         self.brick_height = brick_height
 
     def update(self, screen: Surface) -> None:
-        """Updating location of player"""
+        """Update player's location"""
         if self.moving_right and not self.is_colliding_right:
             self.x += self.speed_x
         if self.moving_left and not self.is_colliding_left:
@@ -47,15 +43,15 @@ class Player:
         if self.jumping:
             self.jump(13, -13)
 
-        self.rect.x = self.x
-        self.rect.y = self.y
+        self.rect.x = round(self.x)
+        self.rect.y = round(self.y)
 
     def blitme_up(self, screen: Surface) -> None:
-        """Displaying player while jumping at current location"""
+        """Display jumping player at the current location"""
         screen.blit(self.image, self.rect)
 
     def jump(self, start: int = 13, end: int = -13) -> bool:
-        """Calculating location of player with creating some physics"""
+        """Calculate player's location with some physics"""
         if self.jumping_counter1 < end:
             self.jumping_counter1 = start
             self.jumping = False
