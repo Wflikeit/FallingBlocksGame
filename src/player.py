@@ -36,7 +36,6 @@ class Player:
         self.is_colliding_left = False
         self.is_colliding_right = False
         self.is_colliding_down = False
-        self.is_colliding_up = False
         self.brick_height = brick_height
 
     def update(self, screen: Surface) -> None:

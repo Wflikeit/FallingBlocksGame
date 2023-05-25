@@ -149,7 +149,7 @@ class TowerFly:
     def _generate_falling_block(self, block_x: int) -> None:
         """Generating falling block"""
         x_cord_for_falling_block = self._choose_coordinates_of_falling_blocks(block_x)
-        falling_block = Falling_Brick()  # Create an instance of Falling_Brick instead of Brick
+        falling_block = Falling_Brick()  # Create an instance of Falling_Brick
         falling_block.rect.x = x_cord_for_falling_block
         falling_block.rect.y = 0
         self.falling_bricks.add(falling_block)
@@ -173,6 +173,9 @@ class TowerFly:
                 self.brick_counter -= 1
                 self.level_counter += 1
             if block.rect.y >= int(self.floor_y / 2) & self.brick_counter < 4:
+                self._generate_falling_block(brick_width)
+                self._generate_falling_block(brick_width)
+                self._generate_falling_block(brick_width)
                 self._generate_falling_block(brick_width)
             # Check for collision with the player
             if pygame.sprite.spritecollide(self.player, self.falling_bricks, False):
