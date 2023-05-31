@@ -6,14 +6,14 @@ import math
 class Player:
     """Class made for managing player"""
 
-    def __init__(self, speed_x: int, speed_y: int, brick_height: int) -> None:
+    def __init__(self, speed_x: int, speed_y: int) -> None:
         """initializing player and initial position"""
         self.speed_x = speed_x
         self.speed_y = speed_y
 
         # uploading image of jumping player
         self.image = pygame.image.load("images/Jump.png")
-        self.image = pygame.transform.scale(self.image, (50, 70))
+        self.image = pygame.transform.scale(self.image, (45, 70))
         self.rect = self.image.get_rect()
 
         # location of player is stored as floats
@@ -26,13 +26,10 @@ class Player:
         self.moving_right = False
         self.moving_left = False
         self.jumping = False
-        self.falling = False
         self.jumping_counter1 = 13
         self.standing = False
         self.is_colliding_left = False
         self.is_colliding_right = False
-        self.is_colliding_down = False
-        self.brick_height = brick_height
 
     def update(self, screen: Surface) -> None:
         """Update player's location"""

@@ -1,5 +1,4 @@
 import pygame
-from pygame.sprite import Sprite
 
 
 class Brick(pygame.sprite.Sprite):
@@ -27,5 +26,5 @@ class Falling_Brick(Brick):
 
         self.y = 780
         self.rect.y = self.y
-        self.falling_speed = 4  # Add the falling_speed attribute and set an appropriate value
+        self.falling_speed = 4
         self.brick_width = self.rect.x
