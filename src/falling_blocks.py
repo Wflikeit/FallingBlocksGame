@@ -60,7 +60,6 @@ class TowerFly:
                 self._update_falling_blocks(self.brick_width)  # Pass brick_width as an argument
 
             self._update_screen()
-
             # Displaying lastly modified screen.
             pygame.display.flip()
             self.settings.CLOCK.tick(70)
@@ -95,6 +94,8 @@ class TowerFly:
             # Resetting stats data
             self.game_stats.reset_stats()
             self.game_stats.game_active = True
+            self._generate_falling_block(self.brick_width)
+
             self.scoreboard.prep_score()
 
             # hiding a mouse
@@ -162,7 +163,6 @@ class TowerFly:
         for brick_number in range(0, number_of_bricks_y):
             self._create_brick(self.settings.screen_width - self.brick_width,
                                self.settings.screen_height - self.brick_width * brick_number, self.right_wall_bricks)
-        self._generate_falling_block(self.brick_width)
 
     def _create_brick(self, x: int, y: int, brick_group: pygame.sprite.Group) -> None:
         """Creating a single brick at the given coordinates and adding it to the given brick group"""
