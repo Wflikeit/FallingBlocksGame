@@ -1,5 +1,5 @@
-from tower_fly import TowerFly
+from falling_blocks import TowerFly
 
 if __name__ == "__main__":
-    tf = TowerFly()
-    tf.run_game()
+    fb = TowerFly()
+    fb.run_game()

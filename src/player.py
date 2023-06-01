@@ -1,6 +1,7 @@
+import math
+
 import pygame
 from pygame import Surface
-import math
 
 
 class Player:
@@ -12,8 +13,28 @@ class Player:
         self.speed_y = speed_y
 
         # uploading image of jumping player
-        self.image = pygame.image.load("images/Jump.png")
-        self.image = pygame.transform.scale(self.image, (45, 70))
+        self.image_walking_left = pygame.image.load("../images/run_left.png")
+        self.image_walking_right = pygame.image.load("../images/run_right.png")
+        self.image_jumping_left = pygame.image.load("../images/jump_left.png")
+        self.image_jumping_right = pygame.image.load("../images/jump_right.png")
+
+        # Resize images to the desired dimensions
+        self.image_walking_left = pygame.transform.scale(self.image_walking_left, (45, 70))
+        self.image_walking_right = pygame.transform.scale(self.image_walking_right, (45, 70))
+        self.image_jumping_left = pygame.transform.scale(self.image_jumping_left, (45, 70))
+        self.image_jumping_right = pygame.transform.scale(self.image_jumping_right, (45, 70))
+
+        self.player_images = [
+            self.image_walking_left,
+            self.image_walking_right,
+            self.image_jumping_left,
+            self.image_jumping_right
+        ]
+        self.image_index = 0
+        self.image = self.player_images[self.image_index]
+        self.orientation = "Left"
+
+        # Other player attributes
         self.rect = self.image.get_rect()
 
         # location of player is stored as floats
@@ -47,12 +68,22 @@ class Player:
         """Display jumping player at the current location"""
         screen.blit(self.image, self.rect)
 
-    def jump(self, start: int = 13, end: int = -13) -> bool:
+    def jump(self, start: float = 13.0, end: float = -13.0) -> bool:
         """Calculate player's location with some physics"""
         if self.jumping_counter1 < end:
             self.jumping_counter1 = start
+
+            if self.orientation == "Right":
+                self.animate(1)
+            if self.orientation == "Left":
+                self.animate(0)
             self.jumping = False
             return True
+
         self.y -= self.jumping_counter1 ** 2 * 0.25 * math.copysign(1, self.jumping_counter1)
-        self.jumping_counter1 -= 1
+        self.jumping_counter1 -= 1.0
         return False
+
+    def animate(self, image_index: int) -> None:
+        """Animate the player by changing the current image"""
+        self.image = self.player_images[image_index]

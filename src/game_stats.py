@@ -3,15 +3,17 @@ class GameStats:
     Monitoring stats in game "Alien invasion
     """
 
-    def __init__(self, ai_game):
+    def __init__(self, fb_game) -> None:
         """Initializing data stats"""
-        self.settings = ai_game.settings
+        self.level = 0
+        self.score = 0
+        self.settings = fb_game.settings
         self.reset_stats()
 
-        # Booting game Alien invasion in inactive mode
+        # Booting game in inactive mode
         self.game_active = False
 
-    def reset_stats(self):
+    def reset_stats(self) -> None:
         """
         Initializing stats that can be changed during game
         """

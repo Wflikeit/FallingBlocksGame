@@ -1,17 +1,17 @@
 import random
+import sys
 
 import pygame
-import sys
 from pygame.event import Event
 
-from player import Player
-from settings import Settings
+from Scoreboard import Scoreboard
 from background import Background
 from brick import Brick
-from brick import Falling_Brick
-from Scoreboard import Scoreboard
-from game_stats import GameStats
+from brick import FallingBrick
 from button import Button
+from game_stats import GameStats
+from player import Player
+from settings import Settings
 
 
 def _choose_coordinates_of_falling_blocks(block_x: int) -> int:
@@ -35,7 +35,7 @@ class TowerFly:
         self.floor_bricks = pygame.sprite.Group()
         self.right_wall_bricks = pygame.sprite.Group()
         self.falling_bricks = pygame.sprite.Group()
-        self.falling_brick = Falling_Brick()
+        self.falling_brick = FallingBrick()
         self._create_bricks()
         self.player = Player(self.settings.player_speed_x, self.settings.player_speed_y)
         self.settings.screen_width = self.screen.get_rect().width
@@ -43,8 +43,6 @@ class TowerFly:
         self.game_stats = GameStats(self)
         self.scoreboard = Scoreboard(self)
         self.play_button = Button(self, "Play")
-
-        # self.extra_point = extra_point()
 
         pygame.display.set_caption("Tower Fly")
 
@@ -65,7 +63,7 @@ class TowerFly:
 
             # Displaying lastly modified screen.
             pygame.display.flip()
-            self.settings.CLOCK.tick(90)
+            self.settings.CLOCK.tick(70)
 
     def _display_bg(self) -> None:
         """Displaying moving background"""
@@ -90,7 +88,7 @@ class TowerFly:
                 mouse_pos = pygame.mouse.get_pos()
                 self.check_play_button(mouse_pos)
 
-    def check_play_button(self, mouse_pos):
+    def check_play_button(self, mouse_pos: tuple[int]):
         """Starting a new game, after pressing mouse button"""
         button_pressed = self.play_button.rect.collidepoint(mouse_pos)
         if button_pressed and not self.game_stats.game_active:
@@ -106,10 +104,20 @@ class TowerFly:
         """Reaction for pressing of keys"""
         if event.key == pygame.K_LEFT and not self.player.is_colliding_left:
             self.player.moving_left = True
+            self.player.orientation = "Left"
+            self.player.animate(0)
         elif event.key == pygame.K_RIGHT and not self.player.is_colliding_right:
             self.player.moving_right = True
+            self.player.orientation = "Right"
+
+            self.player.animate(1)
         elif event.key == pygame.K_SPACE and self.player.standing:
             self.player.jumping = True
+            if self.player.orientation == "Right":
+                self.player.animate(3)
+            if self.player.orientation == "Left":
+                self.player.animate(2)
+
         elif event.key == pygame.K_q:
             sys.exit()
 
@@ -177,7 +185,7 @@ class TowerFly:
     def _generate_falling_block(self, block_x: int) -> None:
         """Generating falling block"""
         x_cord_for_falling_block = _choose_coordinates_of_falling_blocks(block_x)
-        falling_block = Falling_Brick()  # Create an instance of Falling_Brick
+        falling_block = FallingBrick()  # Create an instance of Falling_Brick
         falling_block.rect.x = x_cord_for_falling_block
         falling_block.rect.y = 0
         self.falling_bricks.add(falling_block)
@@ -222,6 +230,6 @@ class TowerFly:
         self.game_stats.game_active = False
         self.brick_counter = 0
         self.level_counter = 0
-        self.brick.falling_speed= self.settings.falling_brick_speed
+        self.brick.falling_speed = self.settings.falling_brick_speed
         self.player.speed_x = self.settings.player_speed_x
         pygame.mouse.set_visible(True)

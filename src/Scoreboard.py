@@ -1,13 +1,15 @@
 import pygame
+
+
 class Scoreboard:
     """Class dedicated to display user's points"""
 
-    def __init__(self, tf_game):
+    def __init__(self, fb_game):
         """Initializing score attributes"""
-        self.screen = tf_game.screen
-        self.settings = tf_game.settings
-        self.screen_rect = tf_game.screen.get_rect()
-        self.stats = tf_game.game_stats
+        self.screen = fb_game.screen
+        self.settings = fb_game.settings
+        self.screen_rect = fb_game.screen.get_rect()
+        self.stats = fb_game.game_stats
 
         # Settings of font for scores
         self.text_color = (30, 30, 30)

@@ -7,7 +7,7 @@ class Brick(pygame.sprite.Sprite):
         """initializing background"""
         super().__init__()
         # uploading the image of brick
-        self.image = pygame.image.load("images/brick.png")
+        self.image = pygame.image.load("../images/brick.png")
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
         self.y = 780
@@ -16,11 +16,11 @@ class Brick(pygame.sprite.Sprite):
         self.brick_width = self.rect.x
 
 
-class Falling_Brick(Brick):
-    def __init__(self):
+class FallingBrick(Brick):
+    def __init__(self) -> None:
         super().__init__()  # Call the parent class's __init__ method
         # uploading the image of brick
-        self.image = pygame.image.load("images/slime-block.png")
+        self.image = pygame.image.load("../images/falling_block.png")
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
 

@@ -2,9 +2,9 @@ import pygame.font
 
 
 class Button:
-    def __init__(self, tf_game, msg):
+    def __init__(self, fb_game, msg) -> None:
         """Initializing attributes of button"""
-        self.screen = tf_game.screen
+        self.screen = fb_game.screen
         self.screen_rect = self.screen.get_rect()
 
         # defining dimensions and properties of button
@@ -21,7 +21,7 @@ class Button:
         # message displayed after pressing the button
         self._prep_msg(msg)
 
-    def _prep_msg(self, msg):
+    def _prep_msg(self, msg) -> None:
         """
         Putting a message in generated picture and centering text on the button
         """
@@ -31,7 +31,7 @@ class Button:
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
-    def draw_button(self):
+    def draw_button(self) -> None:
         # Displaying blank button, subsequently displaying a message on it
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)  # displaying on screen
