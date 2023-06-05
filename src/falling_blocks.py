@@ -63,7 +63,6 @@ class FallingBlocks:
 
     def _display_bg(self) -> None:
         """Displaying moving background"""
-        # print(f"{self.player.x}           {self.player.y}")
         self.screen.blit(self.bg.image, (0, self.settings.iterator))
         self.screen.blit(self.bg.image, (0, self.settings.iterator - self.settings.screen_height))
 
@@ -84,7 +83,7 @@ class FallingBlocks:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
 
-    def _check_play_button(self, mouse_pos: tuple[int, int]):
+    def _check_play_button(self, mouse_pos: tuple[int, int]) -> None:
         """Starting a new game, after pressing mouse button"""
         button_pressed = self.play_button.rect.collidepoint(mouse_pos)
         if button_pressed and not self.game_stats.game_active:
@@ -200,17 +199,17 @@ class FallingBlocks:
             if pygame.sprite.spritecollideany(self.player, self.falling_bricks):
                 self._handle_brick_player_collision()
 
-    def _handle_brick_player_collision(self):
-        print("Collision with player!")
+    def _handle_brick_player_collision(self) -> None:
+        """handles the collision of brick with player"""
         self._new_game()
 
-    def _handle_brick_floor_collision(self, block, brick_width):
+    def _handle_brick_floor_collision(self, block: FallingBrick, brick_width: int) -> None:
+        """handles the collision of block with floor blocks"""
         self.falling_bricks.remove(block)
         self._generate_falling_brick(brick_width)
         self.brick_counter -= 1
         self.level_counter += 1
         self.game_stats.score += self.settings.points_increment
-        print(self.level_counter)
 
     def _increment_difficulty_level(self) -> None:
         """Increasing the level of difficulty"""
@@ -229,13 +228,15 @@ class FallingBlocks:
         self.player.speed_x = self.settings.player_speed_x
         pygame.mouse.set_visible(True)
 
-    def _choose_coordinates_of_falling_bricks(self, block_x: int) -> int:
+    @staticmethod
+    def _choose_coordinates_of_falling_bricks(block_x: int) -> int:
         """Getting random starting coordinates for falling blocks"""
         n = random.randint(1, 7)
         x_cord_for_falling_brick = n * block_x
         return x_cord_for_falling_brick
 
-    def _check_level_completion(self):
+    def _check_level_completion(self) -> None:
+        """Checks if a level of difficulty should be increased"""
         if self.level_counter == 5:
             self._increment_difficulty_level()
             self.level_counter = 0
