@@ -11,7 +11,7 @@ class Settings:
         self.moving_x = self.moving_y = 5
         self.iterator = 0
         self.speed_play = 0.5
-        self.points_counter = 1
+        self.points_increment = 1
         self.initial_points_counter = 1
 
         # physics

@@ -86,9 +86,9 @@ class FallingBlocks:
                 self._check_keyup_event(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                self.check_play_button(mouse_pos)
+                self._check_play_button(mouse_pos)
 
-    def check_play_button(self, mouse_pos: tuple[int, int]):
+    def _check_play_button(self, mouse_pos: tuple[int, int]):
         """Starting a new game, after pressing mouse button"""
         button_pressed = self.play_button.rect.collidepoint(mouse_pos)
         if button_pressed and not self.game_stats.game_active:
@@ -201,7 +201,7 @@ class FallingBlocks:
                 self._generate_falling_brick(brick_width)
                 self.brick_counter -= 1
                 self.level_counter += 1
-                self.game_stats.score += self.settings.points_counter
+                self.game_stats.score += self.settings.points_increment
                 print(self.level_counter)
 
             if block.rect.y >= 0 and self.brick_counter < 4:
@@ -221,13 +221,13 @@ class FallingBlocks:
         """Increasing the level of difficulty"""
         self.falling_brick.falling_speed += 0.2
         self.player.speed_x += 0.2
-        self.settings.points_counter *= 1.2
+        self.settings.points_increment *= 1.2
 
     def _new_game(self) -> None:
         """Resetting stats"""
         pygame.sprite.Group.empty(self.falling_bricks)
         self.game_stats.game_active = False
-        self.settings.points_counter = self.settings.initial_points_counter
+        self.settings.points_increment = self.settings.initial_points_counter
         self.brick_counter = 0
         self.level_counter = 0
         self.falling_brick.falling_speed = self.settings.falling_brick_speed
