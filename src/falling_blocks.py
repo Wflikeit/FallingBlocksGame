@@ -4,47 +4,42 @@ import sys
 import pygame
 from pygame.event import Event
 
-from scoreboard import Scoreboard
-from background import Background
-from brick import Brick
-from brick import FallingBrick
-from button import Button
-from game_stats import GameStats
-from player import Player
-from settings import Settings
-
-
-def _choose_coordinates_of_falling_bricks(block_x: int) -> int:
-    """Getting random starting coordinates for falling blocks"""
-    n = random.randint(1, 7)
-    x_cord_for_falling_brick = n * block_x
-    return x_cord_for_falling_brick
+from src.background import Background
+from src.brick import Brick
+from src.brick import FallingBrick
+from src.button import Button
+from src.game_stats import GameStats
+from src.player import Player
+from src.scoreboard import Scoreboard
+from src.settings import Settings
 
 
 class FallingBlocks:
     def __init__(self) -> None:
         """initialing of game"""
         pygame.init()
-        self.brick_counter = 0
-        self.level_counter = 0
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+        pygame.display.set_caption("Falling Blocks")
+        self.game_stats = GameStats()
+        self.scoreboard = Scoreboard()
+        self.player = Player(self.settings.player_speed_x, self.settings.player_speed_y)
         self.bg = Background(self.settings.screen_width, self.settings.screen_height)
-        self.screen_rect = self.screen.get_rect()
+        self.play_button = Button(self.screen, "Play")
+
+        self.settings.screen_width = self.screen.get_rect().width
+        self.settings.screen_height = self.screen.get_rect().height
+
         self.left_wall_bricks = pygame.sprite.Group()
         self.floor_bricks = pygame.sprite.Group()
         self.right_wall_bricks = pygame.sprite.Group()
         self.falling_bricks = pygame.sprite.Group()
         self.falling_brick = FallingBrick()
-        self._create_bricks()
-        self.player = Player(self.settings.player_speed_x, self.settings.player_speed_y)
-        self.settings.screen_width = self.screen.get_rect().width
-        self.settings.screen_height = self.screen.get_rect().height
-        self.game_stats = GameStats()
-        self.scoreboard = Scoreboard()
-        self.play_button = Button(self.screen, "Play")
 
-        pygame.display.set_caption("Tower Fly")
+        self._create_bricks()
+
+        self.brick_counter = 0
+        self.level_counter = 0
 
     def run_game(self) -> None:
         """ Main loop for pygame"""
@@ -58,6 +53,7 @@ class FallingBlocks:
                 self._display_bg()
                 self.falling_bricks.draw(self.screen)
                 self._update_falling_bricks(self.brick_width)  # Pass brick_width as an argument
+                self._check_level_completion()
                 # self.scoreboard.prep_score(self.game_stats.score, self.screen_rect, self.settings.bg_colour)
 
             self._update_screen()
@@ -103,9 +99,9 @@ class FallingBlocks:
     def _check_keydown_event(self, event: Event) -> None:
         """Reaction for pressing of keys"""
         if event.key == pygame.K_LEFT and not self.player.is_colliding_left and self.game_stats.game_active:
-            self.player.moving_left = True
             self.player.orientation = "Left"
             self.player.animate(0)
+            self.player.moving_left = True
         elif event.key == pygame.K_RIGHT and not self.player.is_colliding_right and self.game_stats.game_active:
             self.player.moving_right = True
             self.player.orientation = "Right"
@@ -165,11 +161,10 @@ class FallingBlocks:
 
     def _create_brick(self, x: int, y: int, brick_group: pygame.sprite.Group) -> None:
         """Creating a single brick at the given coordinates and adding it to the given brick group"""
-        self.brick = Brick()
-        self.brick.rect = self.brick.image.get_rect()
-        self.brick.rect.x = x
-        self.brick.rect.y = y
-        brick_group.add(self.brick)
+        brick = Brick()
+        brick.rect.x = x
+        brick.rect.y = y
+        brick_group.add(brick)
 
     def _check_player_if_player_is_colliding(self) -> None:
         """Checks if player is standing, or hitting the edge"""
@@ -183,7 +178,7 @@ class FallingBlocks:
 
     def _generate_falling_brick(self, brick_x: int) -> None:
         """Generating falling block"""
-        x_cord_for_falling_brick = _choose_coordinates_of_falling_bricks(brick_x)
+        x_cord_for_falling_brick = self._choose_coordinates_of_falling_bricks(brick_x)
         falling_brick = FallingBrick()  # Create an instance of Falling_Brick
         falling_brick.rect.x = x_cord_for_falling_brick
         falling_brick.rect.y = 0
@@ -196,26 +191,26 @@ class FallingBlocks:
             block.rect.y += self.falling_brick.falling_speed
             # Check for collision with the floor
             if pygame.sprite.spritecollideany(block, self.floor_bricks):
-                # Handle collision with the floor
-                self.falling_bricks.remove(block)
-                self._generate_falling_brick(brick_width)
-                self.brick_counter -= 1
-                self.level_counter += 1
-                self.game_stats.score += self.settings.points_increment
-                print(self.level_counter)
+                self._handle_brick_floor_collision(block, brick_width)
 
             if block.rect.y >= 0 and self.brick_counter < 4:
                 for _ in range(4):
                     self._generate_falling_brick(brick_width)
             # Check for collision with the player
             if pygame.sprite.spritecollideany(self.player, self.falling_bricks):
-                # Handle collision with the player (e.g., game over)
-                print("Collision with player!")
-                self._new_game()
+                self._handle_brick_player_collision()
 
-        if self.level_counter == 5:
-            self._increment_difficulty_level()
-            self.level_counter = 0
+    def _handle_brick_player_collision(self):
+        print("Collision with player!")
+        self._new_game()
+
+    def _handle_brick_floor_collision(self, block, brick_width):
+        self.falling_bricks.remove(block)
+        self._generate_falling_brick(brick_width)
+        self.brick_counter -= 1
+        self.level_counter += 1
+        self.game_stats.score += self.settings.points_increment
+        print(self.level_counter)
 
     def _increment_difficulty_level(self) -> None:
         """Increasing the level of difficulty"""
@@ -233,3 +228,14 @@ class FallingBlocks:
         self.falling_brick.falling_speed = self.settings.falling_brick_speed
         self.player.speed_x = self.settings.player_speed_x
         pygame.mouse.set_visible(True)
+
+    def _choose_coordinates_of_falling_bricks(self, block_x: int) -> int:
+        """Getting random starting coordinates for falling blocks"""
+        n = random.randint(1, 7)
+        x_cord_for_falling_brick = n * block_x
+        return x_cord_for_falling_brick
+
+    def _check_level_completion(self):
+        if self.level_counter == 5:
+            self._increment_difficulty_level()
+            self.level_counter = 0

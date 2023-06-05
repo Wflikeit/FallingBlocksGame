@@ -4,8 +4,8 @@ import pygame
 class Brick(pygame.sprite.Sprite):
     def __init__(self) -> None:
         """initializing brick"""
-        self.brick_size = (60, 60)
         super().__init__()
+        self.brick_size = (60, 60)
         # uploading the image of brick
         brick_image_path = "../img/brick.png"
         self.image = pygame.image.load(brick_image_path)
@@ -26,4 +26,4 @@ class FallingBrick(Brick):
 
         # initial_falling_speed = 4
         self.falling_speed = 4
-        self.brick_width = self.rect.x
+        self.brick_width = self.rect.width
