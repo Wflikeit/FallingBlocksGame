@@ -195,7 +195,7 @@ class TowerFly:
     def _update_falling_blocks(self, brick_width: int) -> None:
         """Update positions of falling blocks"""
         for block in self.falling_bricks:
-            block.rect.y += self.brick.falling_speed
+            block.rect.y += self.falling_brick.falling_speed
             # Check for collision with the floor
             if pygame.sprite.spritecollideany(block, self.floor_bricks):
                 # Handle collision with the floor
@@ -221,7 +221,7 @@ class TowerFly:
 
     def _increment_difficulty_level(self) -> None:
         """Increasing the level of difficulty"""
-        self.brick.falling_speed += 0.2
+        self.falling_brick.falling_speed += 0.2
         self.player.speed_x += 0.2
         self.settings.points_counter *= 1.2
 
