@@ -13,6 +13,7 @@ class Player:
         self.speed_y = speed_y
         player_image_size = (45, 70)
 
+        # uploading paths of jumping player
         image_walking_left_path = "../img/run_left.png"
         image_walking_right_path = "../img/run_right.png"
         image_jumping_left_path = "../img/jump_left.png"
@@ -65,16 +66,16 @@ class Player:
         if self.moving_left:
             self.x -= self.speed_x
         if self.jumping:
-            self.jump(13, -13)
+            self._jump(13, -13)
 
         self.rect.x = round(self.x)
         self.rect.y = round(self.y)
 
-    def blitme_up(self, screen: Surface) -> None:
+    def blit_me_up(self, screen: Surface) -> None:
         """Display jumping player at the current location"""
         screen.blit(self.image, self.rect)
 
-    def jump(self, start: float = 13.0, end: float = -13.0) -> bool:
+    def _jump(self, start: float = 13.0, end: float = -13.0) -> bool:
         """Calculate player's location with some physics"""
         if self.jumping_counter < end:
             self.jumping_counter = start

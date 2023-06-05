@@ -5,7 +5,7 @@ from pygame import Surface
 class Scoreboard:
     """Class dedicated to display user's points"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializing score attributes"""
 
         # Settings of font for scores
@@ -26,6 +26,7 @@ class Scoreboard:
         self.score_rect = self.score_image.get_rect()
         self.score_rect.centerx = screen.get_rect().centerx
         self.score_rect.top = 20
+
     def show_score(self, bg_color: tuple[int, int, int], screen: Surface, score: int) -> None:
         """Display the score on the screen"""
         self.prep_score(bg_color, screen, score)

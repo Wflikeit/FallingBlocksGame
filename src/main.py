@@ -1,5 +1,5 @@
-from falling_blocks import TowerFly
+from falling_blocks import FallingBlocks
 
 if __name__ == "__main__":
-    fb = TowerFly()
+    fb = FallingBlocks()
     fb.run_game()

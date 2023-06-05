@@ -55,7 +55,7 @@ def test_player_initialization(player):
 def test_player_jump(player):
     """Test if the player's jump function works correctly"""
     player.jumping = True
-    player.jump()
+    player._jump()
     assert player.y < 711.0  # Player's y position should be lower due to jumping
     assert math.isclose(player.jumping_counter, 12.0, rel_tol=1e-9)  # Counter should decrease by 1.0
 

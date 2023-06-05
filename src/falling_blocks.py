@@ -4,7 +4,7 @@ import sys
 import pygame
 from pygame.event import Event
 
-from Scoreboard import Scoreboard
+from scoreboard import Scoreboard
 from background import Background
 from brick import Brick
 from brick import FallingBrick
@@ -14,14 +14,14 @@ from player import Player
 from settings import Settings
 
 
-def _choose_coordinates_of_falling_blocks(block_x: int) -> int:
+def _choose_coordinates_of_falling_bricks(block_x: int) -> int:
     """Getting random starting coordinates for falling blocks"""
     n = random.randint(1, 7)
-    x_cord_for_falling_block = n * block_x
-    return x_cord_for_falling_block
+    x_cord_for_falling_brick = n * block_x
+    return x_cord_for_falling_brick
 
 
-class TowerFly:
+class FallingBlocks:
     def __init__(self) -> None:
         """initialing of game"""
         pygame.init()
@@ -42,7 +42,7 @@ class TowerFly:
         self.settings.screen_height = self.screen.get_rect().height
         self.game_stats = GameStats()
         self.scoreboard = Scoreboard()
-        self.play_button = Button(self, "Play")
+        self.play_button = Button(self.screen, "Play")
 
         pygame.display.set_caption("Tower Fly")
 
@@ -57,7 +57,7 @@ class TowerFly:
                 self.settings.iterator += self.settings.speed_play
                 self._display_bg()
                 self.falling_bricks.draw(self.screen)
-                self._update_falling_blocks(self.brick_width)  # Pass brick_width as an argument
+                self._update_falling_bricks(self.brick_width)  # Pass brick_width as an argument
                 # self.scoreboard.prep_score(self.game_stats.score, self.screen_rect, self.settings.bg_colour)
 
             self._update_screen()
@@ -95,8 +95,7 @@ class TowerFly:
             # Resetting stats data
             self.game_stats.reset_stats()
             self.game_stats.game_active = True
-            self._generate_falling_block(self.brick_width)
-
+            self._generate_falling_brick(self.brick_width)
 
             # hiding a mouse
             pygame.mouse.set_visible(False)
@@ -131,10 +130,9 @@ class TowerFly:
 
     def _update_screen(self) -> None:
         """refreshing screen during each iteration"""
-        self.player.blitme_up(self.screen)
+        self.player.blit_me_up(self.screen)
         self.left_wall_bricks.draw(self.screen)
         self.floor_bricks.draw(self.screen)
-        # self.scoreboard.show_score(self.screen)
         self.right_wall_bricks.draw(self.screen)
         self.scoreboard.show_score(self.settings.bg_colour, self.screen, self.game_stats.score)
 
@@ -183,16 +181,16 @@ class TowerFly:
         if pygame.sprite.spritecollideany(self.player, self.floor_bricks):
             self.player.standing = True
 
-    def _generate_falling_block(self, block_x: int) -> None:
+    def _generate_falling_brick(self, brick_x: int) -> None:
         """Generating falling block"""
-        x_cord_for_falling_block = _choose_coordinates_of_falling_blocks(block_x)
-        falling_block = FallingBrick()  # Create an instance of Falling_Brick
-        falling_block.rect.x = x_cord_for_falling_block
-        falling_block.rect.y = 0
-        self.falling_bricks.add(falling_block)
+        x_cord_for_falling_brick = _choose_coordinates_of_falling_bricks(brick_x)
+        falling_brick = FallingBrick()  # Create an instance of Falling_Brick
+        falling_brick.rect.x = x_cord_for_falling_brick
+        falling_brick.rect.y = 0
+        self.falling_bricks.add(falling_brick)
         self.brick_counter += 1
 
-    def _update_falling_blocks(self, brick_width: int) -> None:
+    def _update_falling_bricks(self, brick_width: int) -> None:
         """Update positions of falling blocks"""
         for block in self.falling_bricks:
             block.rect.y += self.falling_brick.falling_speed
@@ -200,7 +198,7 @@ class TowerFly:
             if pygame.sprite.spritecollideany(block, self.floor_bricks):
                 # Handle collision with the floor
                 self.falling_bricks.remove(block)
-                self._generate_falling_block(brick_width)
+                self._generate_falling_brick(brick_width)
                 self.brick_counter -= 1
                 self.level_counter += 1
                 self.game_stats.score += self.settings.points_counter
@@ -208,7 +206,7 @@ class TowerFly:
 
             if block.rect.y >= 0 and self.brick_counter < 4:
                 for _ in range(4):
-                    self._generate_falling_block(brick_width)
+                    self._generate_falling_brick(brick_width)
             # Check for collision with the player
             if pygame.sprite.spritecollideany(self.player, self.falling_bricks):
                 # Handle collision with the player (e.g., game over)
@@ -232,6 +230,6 @@ class TowerFly:
         self.settings.points_counter = self.settings.initial_points_counter
         self.brick_counter = 0
         self.level_counter = 0
-        self.brick.falling_speed = self.settings.falling_brick_speed
+        self.falling_brick.falling_speed = self.settings.falling_brick_speed
         self.player.speed_x = self.settings.player_speed_x
         pygame.mouse.set_visible(True)

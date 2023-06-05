@@ -9,12 +9,9 @@ class GameStats:
         self.score = 0
         self.reset_stats()
 
-        # Booting game in inactive mode
         self.game_active = False
 
     def reset_stats(self) -> None:
-        """
-        Initializing stats that can be changed during game
-        """
+        """ Initializing stats that can be changed during game """
         self.score = 0
         self.level = 1
