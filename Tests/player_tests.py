@@ -28,7 +28,7 @@ def test_player_initialization(player):
     assert not player.moving_right
     assert not player.moving_left
     assert not player.jumping
-    assert player.jumping_counter1 == 13
+    assert player.jumping_counter == 13
     assert not player.standing
     assert not player.is_colliding_left
     assert not player.is_colliding_right
@@ -57,7 +57,7 @@ def test_player_jump(player):
     player.jumping = True
     player.jump()
     assert player.y < 711.0  # Player's y position should be lower due to jumping
-    assert math.isclose(player.jumping_counter1, 12.0, rel_tol=1e-9)  # Counter should decrease by 1.0
+    assert math.isclose(player.jumping_counter, 12.0, rel_tol=1e-9)  # Counter should decrease by 1.0
 
 
 def test_player_animate(player):

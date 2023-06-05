@@ -53,7 +53,7 @@ class TowerFly:
 
             if self.game_stats.game_active:
                 self._check_player_if_player_is_colliding()
-                self.player.update(self.screen)
+                self.player.update()
                 self.settings.iterator += self.settings.speed_play
                 self._display_bg()
                 self.falling_bricks.draw(self.screen)

@@ -11,18 +11,24 @@ class Player:
         """initializing player and initial position"""
         self.speed_x = speed_x
         self.speed_y = speed_y
+        player_image_size = (45, 70)
+
+        image_walking_left_path = "../img/run_left.png"
+        image_walking_right_path = "../img/run_right.png"
+        image_jumping_left_path = "../img/jump_left.png"
+        image_jumping_right_path = "../img/jump_right.png"
 
         # uploading image of jumping player
-        self.image_walking_left = pygame.image.load("../images/run_left.png")
-        self.image_walking_right = pygame.image.load("../images/run_right.png")
-        self.image_jumping_left = pygame.image.load("../images/jump_left.png")
-        self.image_jumping_right = pygame.image.load("../images/jump_right.png")
+        self.image_walking_left = pygame.image.load(image_walking_left_path)
+        self.image_walking_right = pygame.image.load(image_walking_right_path)
+        self.image_jumping_left = pygame.image.load(image_jumping_left_path)
+        self.image_jumping_right = pygame.image.load(image_jumping_right_path)
 
         # Resize images to the desired dimensions
-        self.image_walking_left = pygame.transform.scale(self.image_walking_left, (45, 70))
-        self.image_walking_right = pygame.transform.scale(self.image_walking_right, (45, 70))
-        self.image_jumping_left = pygame.transform.scale(self.image_jumping_left, (45, 70))
-        self.image_jumping_right = pygame.transform.scale(self.image_jumping_right, (45, 70))
+        self.image_walking_left = pygame.transform.scale(self.image_walking_left, player_image_size)
+        self.image_walking_right = pygame.transform.scale(self.image_walking_right, player_image_size)
+        self.image_jumping_left = pygame.transform.scale(self.image_jumping_left, player_image_size)
+        self.image_jumping_right = pygame.transform.scale(self.image_jumping_right, player_image_size)
 
         self.player_images = [
             self.image_walking_left,
@@ -47,16 +53,16 @@ class Player:
         self.moving_right = False
         self.moving_left = False
         self.jumping = False
-        self.jumping_counter1 = 13
+        self.jumping_counter = 13
         self.standing = False
         self.is_colliding_left = False
         self.is_colliding_right = False
 
-    def update(self, screen: Surface) -> None:
+    def update(self) -> None:
         """Update player's location"""
-        if self.moving_right and not self.is_colliding_right:
+        if self.moving_right:
             self.x += self.speed_x
-        if self.moving_left and not self.is_colliding_left:
+        if self.moving_left:
             self.x -= self.speed_x
         if self.jumping:
             self.jump(13, -13)
@@ -70,8 +76,8 @@ class Player:
 
     def jump(self, start: float = 13.0, end: float = -13.0) -> bool:
         """Calculate player's location with some physics"""
-        if self.jumping_counter1 < end:
-            self.jumping_counter1 = start
+        if self.jumping_counter < end:
+            self.jumping_counter = start
 
             if self.orientation == "Right":
                 self.animate(1)
@@ -80,8 +86,8 @@ class Player:
             self.jumping = False
             return True
 
-        self.y -= self.jumping_counter1 ** 2 * 0.25 * math.copysign(1, self.jumping_counter1)
-        self.jumping_counter1 -= 1.0
+        self.y -= self.jumping_counter ** 2 * 0.25 * math.copysign(1, self.jumping_counter)
+        self.jumping_counter -= 1.0
         return False
 
     def animate(self, image_index: int) -> None:
