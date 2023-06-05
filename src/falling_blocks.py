@@ -29,7 +29,7 @@ class TowerFly:
         self.level_counter = 0
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
-        self.bg = Background(self)
+        self.bg = Background(self.settings.screen_width, self.settings.screen_height)
         self.screen_rect = self.screen.get_rect()
         self.left_wall_bricks = pygame.sprite.Group()
         self.floor_bricks = pygame.sprite.Group()
@@ -40,8 +40,8 @@ class TowerFly:
         self.player = Player(self.settings.player_speed_x, self.settings.player_speed_y)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
-        self.game_stats = GameStats(self)
-        self.scoreboard = Scoreboard(self)
+        self.game_stats = GameStats()
+        self.scoreboard = Scoreboard()
         self.play_button = Button(self, "Play")
 
         pygame.display.set_caption("Tower Fly")
@@ -58,6 +58,7 @@ class TowerFly:
                 self._display_bg()
                 self.falling_bricks.draw(self.screen)
                 self._update_falling_blocks(self.brick_width)  # Pass brick_width as an argument
+                # self.scoreboard.prep_score(self.game_stats.score, self.screen_rect, self.settings.bg_colour)
 
             self._update_screen()
             # Displaying lastly modified screen.
@@ -87,7 +88,7 @@ class TowerFly:
                 mouse_pos = pygame.mouse.get_pos()
                 self.check_play_button(mouse_pos)
 
-    def check_play_button(self, mouse_pos: tuple[int]):
+    def check_play_button(self, mouse_pos: tuple[int, int]):
         """Starting a new game, after pressing mouse button"""
         button_pressed = self.play_button.rect.collidepoint(mouse_pos)
         if button_pressed and not self.game_stats.game_active:
@@ -96,23 +97,22 @@ class TowerFly:
             self.game_stats.game_active = True
             self._generate_falling_block(self.brick_width)
 
-            self.scoreboard.prep_score()
 
             # hiding a mouse
             pygame.mouse.set_visible(False)
 
     def _check_keydown_event(self, event: Event) -> None:
         """Reaction for pressing of keys"""
-        if event.key == pygame.K_LEFT and not self.player.is_colliding_left:
+        if event.key == pygame.K_LEFT and not self.player.is_colliding_left and self.game_stats.game_active:
             self.player.moving_left = True
             self.player.orientation = "Left"
             self.player.animate(0)
-        elif event.key == pygame.K_RIGHT and not self.player.is_colliding_right:
+        elif event.key == pygame.K_RIGHT and not self.player.is_colliding_right and self.game_stats.game_active:
             self.player.moving_right = True
             self.player.orientation = "Right"
 
             self.player.animate(1)
-        elif event.key == pygame.K_SPACE and self.player.standing:
+        elif event.key == pygame.K_SPACE and self.player.standing and self.game_stats.game_active:
             self.player.jumping = True
             if self.player.orientation == "Right":
                 self.player.animate(3)
@@ -134,8 +134,9 @@ class TowerFly:
         self.player.blitme_up(self.screen)
         self.left_wall_bricks.draw(self.screen)
         self.floor_bricks.draw(self.screen)
+        # self.scoreboard.show_score(self.screen)
         self.right_wall_bricks.draw(self.screen)
-        self.scoreboard.show_score()
+        self.scoreboard.show_score(self.settings.bg_colour, self.screen, self.game_stats.score)
 
         if not self.game_stats.game_active:
             self.play_button.draw_button()
@@ -205,7 +206,7 @@ class TowerFly:
                 self.game_stats.score += self.settings.points_counter
                 print(self.level_counter)
 
-            if block.rect.y >= int(self.floor_y / 2) & self.brick_counter < 4:
+            if block.rect.y >= 0 and self.brick_counter < 4:
                 for _ in range(4):
                     self._generate_falling_block(brick_width)
             # Check for collision with the player
@@ -220,14 +221,15 @@ class TowerFly:
 
     def _increment_difficulty_level(self) -> None:
         """Increasing the level of difficulty"""
-        self.brick.falling_speed += 0.4
+        self.brick.falling_speed += 0.2
         self.player.speed_x += 0.2
-        self.settings.points_counter *= 2
+        self.settings.points_counter *= 1.2
 
     def _new_game(self) -> None:
         """Resetting stats"""
         pygame.sprite.Group.empty(self.falling_bricks)
         self.game_stats.game_active = False
+        self.settings.points_counter = self.settings.initial_points_counter
         self.brick_counter = 0
         self.level_counter = 0
         self.brick.falling_speed = self.settings.falling_brick_speed

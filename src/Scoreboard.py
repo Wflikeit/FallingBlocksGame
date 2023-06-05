@@ -1,36 +1,33 @@
-import pygame
+import pygame.font
+from pygame import Surface
 
 
 class Scoreboard:
     """Class dedicated to display user's points"""
 
-    def __init__(self, fb_game):
+    def __init__(self):
         """Initializing score attributes"""
-        self.screen = fb_game.screen
-        self.settings = fb_game.settings
-        self.screen_rect = fb_game.screen.get_rect()
-        self.stats = fb_game.game_stats
 
         # Settings of font for scores
         self.text_color = (30, 30, 30)
         self.font = pygame.font.SysFont(None, 88)
 
         # Preparing initial pictures with scores
-        self.score_image = None
-        self.score_rect = None
+        self.score_image = self.font.render("0", True, self.text_color)
+        self.score_rect = self.score_image.get_rect()
 
-    def prep_score(self):
-        """Transforming scores into a generated image"""
-        rounded_score = round(self.stats.score, -1)
+    def prep_score(self, bg_color: tuple[int, int, int], screen: Surface, score: int) -> None:
+        """Transform the score into a rendered image"""
+        rounded_score = round(score, -1)
         score_str = "{:,}".format(rounded_score)
-        self.score_image = self.font.render(score_str, True, self.text_color, self.settings.bg_colour)
+        self.score_image = self.font.render(score_str, True, self.text_color, bg_color)
 
         # Position the score image at the center top of the screen
         self.score_rect = self.score_image.get_rect()
-        self.score_rect.centerx = self.screen_rect.centerx
-        self.score_rect.top = self.screen_rect.top
-
-    def show_score(self):
+        self.score_rect.centerx = screen.get_rect().centerx
+        self.score_rect.top = 20
+    def show_score(self, bg_color: tuple[int, int, int], screen: Surface, score: int) -> None:
         """Display the score on the screen"""
-        self.prep_score()
-        self.screen.blit(self.score_image, self.score_rect)
+        self.prep_score(bg_color, screen, score)
+
+        screen.blit(self.score_image, self.score_rect)

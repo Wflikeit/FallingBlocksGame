@@ -1,13 +1,12 @@
 class GameStats:
     """
-    Monitoring stats in game "Alien invasion
+    Monitoring stats in game "FallingBlocks"
     """
 
-    def __init__(self, fb_game) -> None:
+    def __init__(self) -> None:
         """Initializing data stats"""
         self.level = 0
         self.score = 0
-        self.settings = fb_game.settings
         self.reset_stats()
 
         # Booting game in inactive mode

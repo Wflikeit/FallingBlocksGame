@@ -12,6 +12,7 @@ class Settings:
         self.iterator = 0
         self.speed_play = 0.5
         self.points_counter = 1
+        self.initial_points_counter = 1
 
         # physics
         self.g_force = 0.00001
@@ -20,3 +21,4 @@ class Settings:
         self.player_speed_y = self.player_jump_limit
         self.player_jump_speed = 2
         self.falling_brick_speed = 4
+
