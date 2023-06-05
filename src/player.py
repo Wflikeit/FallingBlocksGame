@@ -80,16 +80,20 @@ class Player:
         if self.jumping_counter < end:
             self.jumping_counter = start
 
-            if self.orientation == "Right":
-                self.animate(1)
-            if self.orientation == "Left":
-                self.animate(0)
+            self._check_for_direction()
             self.jumping = False
             return True
 
         self.y -= self.jumping_counter ** 2 * 0.25 * math.copysign(1, self.jumping_counter)
         self.jumping_counter -= 1.0
         return False
+
+    def _check_for_direction(self):
+        """Checks direction of player"""
+        if self.orientation == "Right":
+            self.animate(1)
+        if self.orientation == "Left":
+            self.animate(0)
 
     def animate(self, image_index: int) -> None:
         """Animate the player by changing the current image"""
