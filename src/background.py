@@ -6,7 +6,7 @@ class Background:
     def __init__(self, screen_width: int, screen_height: int) -> None:
         """initializing background"""
 
-        background_image_path = "../img/back.png"
+        background_image_path = "img/back.png"
 
         # uploading image of background
         self.image = pygame.image.load(background_image_path)

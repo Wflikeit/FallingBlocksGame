@@ -14,10 +14,10 @@ class Player:
         player_image_size = (45, 70)
 
         # uploading paths of jumping player
-        image_walking_left_path = "../img/run_left.png"
-        image_walking_right_path = "../img/run_right.png"
-        image_jumping_left_path = "../img/jump_left.png"
-        image_jumping_right_path = "../img/jump_right.png"
+        image_walking_left_path = "img/run_left.png"
+        image_walking_right_path = "img/run_right.png"
+        image_jumping_left_path = "img/jump_left.png"
+        image_jumping_right_path = "img/jump_right.png"
 
         # uploading image of jumping player
         self.image_walking_left = pygame.image.load(image_walking_left_path)

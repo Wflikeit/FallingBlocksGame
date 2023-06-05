@@ -21,4 +21,3 @@ class Settings:
         self.player_speed_y = self.player_jump_limit
         self.player_jump_speed = 2
         self.falling_brick_speed = 4
-
