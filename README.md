@@ -39,7 +39,8 @@ The test suite will run and display the results in the terminal or command promp
 
 
 ## License
-FallingBlocks is an open-source project licensed under the MIT License.
+FallingBlocks is an open-source project licensed under the [MIT License](LICENSE).
+.
 
 
 ```shell
