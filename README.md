@@ -1,6 +1,9 @@
 # FallingBlocks
-![FallingBlocks.png](FallingBlocks.png)
 ## Description
+<p align="center">
+  <img src="FallingBlocks.png" alt="FallinBlocks">
+</p>
+
 FallingBlocks is a fun and engaging game that involves the player avoiding falling blocks. The player can move in the x-axis, while if he wants to add more dynamics to the game then he also has the option of jumping using the spacebar. What's more, the game includes moving on backgrounds which makes it even more enjoyable.
 ## Running the Game
 ### To run the FallingBlocks game, follow these steps:
@@ -40,9 +43,3 @@ The test suite will run and display the results in the terminal or command promp
 
 ## License
 FallingBlocks is an open-source project licensed under the [MIT License](LICENSE).
-.
-
-
-```shell
-pip install pytest
-
